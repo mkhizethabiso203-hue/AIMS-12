@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AIMS — Application Information Management System</title>
+  <style>
+    :root {
+      --blue: #0b63d8;
+      --blue-dark: #084eb0;
+      --blue-light: #e8f0ff;
+      --muted: #6b7280;
+      --muted-light: #9ca3af;
+      --bg: #ffffff;
+      --surface: #f6f9ff;
+      --surface-dark: #e6eefc;
+      --radius: 12px;
+      --gap: 18px;
+      --shadow: 0 6px 20px rgba(11, 99, 216, 0.08);
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html, body { 
+      height: 100%; 
+      background: linear-gradient(180deg, var(--surface), #ffffff); 
+      color: #0b2540;
+      line-height: 1.6;
+    }
+    
+    header { 
+      background: var(--blue); 
+      color: white; 
+      padding: 14px 20px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    header .brand { 
+      font-weight: 700; 
+      letter-spacing: .6px; 
+      font-size: 1.2rem;
+    }
+    
+    .nav { display: flex; gap: 10px; }
+    
+    .btn { 
+      background: transparent; 
+      border: 2px solid rgba(255,255,255,.18); 
+      color: white; 
+      padding: 8px 14px; 
+      border-radius: 10px; 
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover { background: rgba(255,255,255,0.1); }
+    
+    .btn.ghost { background: transparent; }
+    
+    .container { 
+      max-width: 1200px; 
+      margin: 30px auto; 
+      padding: 20px;
+    }
+    
+    .card { 
+      background: var(--bg); 
+      padding: 22px; 
+      border-radius: var(--radius); 
+      box-shadow: var(--shadow);
+    }
+    
+    .grid { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 22px; 
+      align-items: start;
+    }
+    
+    .grid-3 { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr 1fr; 
+      gap: 22px; 
+    }
+    
+    .grid-sidebar { 
+      display: grid; 
+      grid-template-columns: 250px 1fr; 
+      gap: 22px; 
+    }
+
+    /* homepage */
+    .hero { padding: 34px; }
+    .hero h1 { margin: 0 0 12px; font-size: 28px; color: var(--blue-dark); }
+    .hero p { margin: 0 0 18px; color: var(--muted); }
+    .hero .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .primary { 
+      background: var(--blue); 
+      color: white; 
+      border: none; 
+      padding: 12px 16px; 
+      border-radius: 10px; 
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .primary:hover { background: var(--blue-dark); }
+    
+    /* forms */
+    form { display: flex; flex-direction: column; gap: 12px; }
+    label { font-size: 13px; color: var(--muted); font-weight: 500; }
+    input[type=text], input[type=email], input[type=password], input[type=date], select, textarea { 
+      padding: 12px; 
+      border-radius: 8px; 
+      border: 1px solid #e6eefc;
+      font-family: inherit;
+      transition: border-color 0.3s;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(11, 99, 216, 0.1);
+    }
+    
+    .muted { font-size: 13px; color: var(--muted); }
+    .small { font-size: 12px; }
+    
+    /* uploader */
+    .uploader { 
+      border: 2px dashed rgba(11,99,216,.12); 
+      padding: 18px; 
+      border-radius: 10px; 
+      text-align: center; 
+      background: linear-gradient(180deg,rgba(11,99,216,.02),transparent);
+      transition: all 0.3s;
+    }
+    
+    .uploader:hover { border-color: var(--blue); }
+    
+    .file-list { margin-top: 12px; }
+    .file-item { 
+      display: flex; 
+      justify-content: space-between; 
+      padding: 8px 10px; 
+      border-radius: 8px; 
+      background: #f8fbff; 
+      border: 1px solid rgba(11,99,216,.05); 
+      margin-bottom: 8px;
+    }
+    
+    /* dashboard */
+    .sidebar { 
+      background: #fff; 
+      border-radius: 12px; 
+      padding: 16px; 
+      min-height: 220px;
+      box-shadow: var(--shadow);
+    }
+    
+    .menu { display: flex; flex-direction: column; gap: 8px; }
+    .menu button { 
+      background: transparent; 
+      border: none; 
+      text-align: left; 
+      padding: 8px 10px; 
+      border-radius: 8px; 
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .menu button:hover { background: var(--blue-light); }
+    .menu button.active { background: var(--blue-light); color: var(--blue-dark); font-weight: 600; }
+    
+    .status-pill { 
+      display: inline-block; 
+      padding: 6px 10px; 
+      border-radius: 999px; 
+      background: #e8f0ff; 
+      color: var(--blue-dark); 
+      font-weight: 600;
+      font-size: 12px;
+    }
+    
+    .status-pill.pending { background: #fef3c7; color: #92400e; }
+    .status-pill.approved { background: #d1fae5; color: #065f46; }
+    .status-pill.rejected { background: #fee2e2; color: #991b1b; }
+    
+    /* application steps */
+    .steps { display: flex; justify-content: space-between; margin: 30px 0; position: relative; }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--surface-dark);
+      z-index: 1;
+    }
+    
+    .step { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      position: relative; 
+      z-index: 2;
+      flex: 1;
+    }
+    
+    .step-number { 
+      width: 40px; 
+      height: 40px; 
+      border-radius: 50%; 
+      background: var(--surface-dark); 
+      color: var(--muted); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-bottom: 8px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .step.active .step-number { background: var(--blue); color: white; }
+    .step.completed .step-number { background: var(--blue-dark); color: white; }
+    
+    .step-label { font-size: 12px; color: var(--muted); text-align: center; }
+    .step.active .step-label { color: var(--blue-dark); font-weight: 600; }
+    
+    /* dashboard cards */
+    .dashboard-card { 
+      background: white; 
+      border-radius: var(--radius); 
+      padding: 20px; 
+      box-shadow: var(--shadow);
+      height: 100%;
+    }
+    
+    .dashboard-card h3 { margin-top: 0; margin-bottom: 16px; color: var(--blue-dark); }
+    
+    .message-item, .notification-item { 
+      padding: 12px; 
+      border-radius: 8px; 
+      background: var(--surface); 
+      margin-bottom: 10px;
+      border-left: 3px solid var(--blue);
+    }
+    
+    .notification-item { border-left-color: #f59e0b; }
+    
+    .activity-item { 
+      display: flex; 
+      align-items: center; 
+      padding: 10px 0; 
+      border-bottom: 1px solid var(--surface-dark);
+    }
+    
+    .activity-item:last-child { border-bottom: none; }
+    
+    .activity-icon { 
+      width: 32px; 
+      height: 32px; 
+      border-radius: 50%; 
+      background: var(--blue-light); 
+      color: var(--blue); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-right: 12px;
+      font-size: 14px;
+    }
+    
+    footer { 
+      margin-top: 30px; 
+      text-align: center; 
+      color: var(--muted); 
+      font-size: 13px; 
+      padding: 20px;
+      border-top: 1px solid var(--surface-dark);
+    }
+    
+    /* profile image */
+    .profile-img { 
+      width: 80px; 
+      height: 80px; 
+      border-radius: 50%; 
+      background: var(--blue-light); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin: 0 auto 16px;
+      color: var(--blue);
+      font-size: 24px;
+    }
+    
+    /* small screens */
+    @media (max-width: 880px) {
+      .grid, .grid-3, .grid-sidebar { grid-template-columns: 1fr; }
+      .nav { display: none; }
+      .container { padding: 12px; }
+      .steps { flex-direction: column; gap: 20px; }
+      .steps::before { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">AIMS - Applicant Portal</div>
+    <div class="nav">
+      <button class="btn" onclick="showView('home')">Home</button>
+      <button class="btn" onclick="showView('login')">Login</button>
+      <button class="btn" onclick="showView('register')">Register</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- HOME -->
+    <section id="home" class="card hero" aria-labelledby="homeTitle">
+      <div class="grid">
+        <div>
+          <h1 id="homeTitle">Welcome to AIMS</h1>
+          <p>Start your bursary application by registering, logging in, and following our 5-step application process.</p>
+          <div class="actions">
+            <button class="primary" onclick="showView('login')">Login</button>
+            <button class="primary" style="background:var(--blue-dark)" onclick="showView('register')">Register</button>
+            <button class="btn" onclick="startApplication()">Start Application</button>
+          </div>
+          <hr style="margin:20px 0;border:none;border-top:1px solid #eef4ff">
+          <p class="muted">Prototype: client-side demonstration. Data is stored locally in your browser for this demo.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0">Quick Info</h3>
+          <p class="muted small">Required documents: ID Document, Transcript, Proof of Residence. Allowed file types: pdf,jpg,png. Max file size for demo: 10MB.</p>
+          <div style="margin-top:14px">
+            <div class="status-pill">Application: Not started</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOGIN -->
+    <section id="login" class="card" style="display:none">
+      <h2 style="margin-top:0">Login</h2>
+      <form id="loginForm" onsubmit="event.preventDefault();handleLogin();">
+        <div>
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" required placeholder="you@example.com">
+        </div>
+        <div>
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" required placeholder="Enter password">
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="primary" type="submit">Login</button>
+          <button class="btn" type="button" onclick="showView('register')">Don't have an account? Register</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- REGISTER -->
+    <section id="register" class="card" style="display:none">
+      <h2 style="margin-top:0">Register</h2>
+      <form id="registerForm" onsubmit="event.preventDefault();handleRegister();">
+        <div>
+          <label for="regName">Full name</label>
+          <input id="regName" type="text" required placeholder="Jane Doe">
+        </div>
+        <div>
+          <label for="regEmail">Email</label>
+          <input id="regEmail" type="email" required placeholder="you@example.com">
+        </div>
+        <div>
+          <label for="regPassword">Password</label>
+          <input id="regPassword" type="password" required placeholder="Create password">
+        </div>
+        <div>
+          <label for="regPassword2">Confirm password</label>
+          <input id="regPassword2" type="password" required placeholder="Confirm password">
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="primary" type="submit">Register & Start Application</button>
+          <button class="btn" type="button" onclick="showView('login')">Back to Login</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- BURSARY APPLICATION STEPS -->
+    <section id="application-steps" class="card" style="display:none">
+      <h2 style="margin-top:0">Bursary Application</h2>
+      <p class="muted">Complete all 5 steps to submit your bursary application.</p>
+      
+      <div class="steps">
+        <div class="step active" id="step1">
+          <div class="step-number">1</div>
+          <div class="step-label">Personal</div>
+        </div>
+        <div class="step" id="step2">
+          <div class="step-number">2</div>
+          <div class="step-label">Academic</div>
+        </div>
+        <div class="step" id="step3">
+          <div class="step-number">3</div>
+          <div class="step-label">Financial</div>
+        </div>
+        <div class="step" id="step4">
+          <div class="step-number">4</div>
+          <div class="step-label">Documents</div>
+        </div>
+        <div class="step" id="step5">
+          <div class="step-number">5</div>
+          <div class="step-label">Review</div>
+        </div>
+      </div>
+      
+      <div id="step-content">
+        <!-- Step content will be dynamically loaded here -->
+      </div>
+      
+      <div style="display:flex;justify-content:space-between;margin-top:20px">
+        <button class="btn" id="prev-step" onclick="prevStep()" style="display:none">Previous</button>
+        <button class="primary" id="next-step" onclick="nextStep()">Next Step</button>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="card" style="display:none">
+      <div class="grid-sidebar">
+        <aside class="sidebar">
+          <div class="profile-img">👤</div>
+          <div id="welcomeName" style="font-weight:700;margin-bottom:6px;text-align:center">Welcome, Student</div>
+          <div class="menu">
+            <button class="active" onclick="showPanel('overview')">Dashboard</button>
+            <button onclick="showPanel('applications')">My Applications</button>
+            <button onclick="showPanel('messages')">Messages</button>
+            <button onclick="showPanel('settings')">Settings</button>
+            <button onclick="logout()" style="color:var(--muted);margin-top:20px">Logout</button>
+          </div>
+        </aside>
+
+        <div>
+          <div id="panelContent" class="card">
+            <h3 id="panelTitle" style="margin-top:0">Dashboard</h3>
+            <p class="muted" id="appStatus">Application status: <span class="status-pill pending" id="statusPill">Pending Review</span></p>
+
+            <div id="panelBody" style="margin-top:12px">
+              <!-- Dashboard content will be dynamically loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © 2025 ASSET | Powered by Tomorrow Engineering Technology (T @ E 2)
+    </footer>
+  </main>
+
+  <script>
+    // ---------- Application State ----------
+    const state = {
+      user: null, 
+      files: [],
+      currentStep: 1,
+      applicationData: {
+        personal: {},
+        academic: {},
+        financial: {},
+        documents: []
+      }
+    };
+
+    // ---------- Helper Functions ----------
+    function saveUsers(users) { localStorage.setItem('aims_users', JSON.stringify(users)); }
+    
+    function loadUsers() { 
+      try { 
+        return JSON.parse(localStorage.getItem('aims_users') || '{}'); 
+      } catch(e) { 
+        return {}; 
+      } 
+    }
+    
+    function saveCurrent(userEmail) { localStorage.setItem('aims_current', userEmail); }
+    
+    function loadCurrent() { return localStorage.getItem('aims_current'); }
+    
+    function escapeHtml(s) { 
+      if(!s) return ''; 
+      return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); 
+    }
+
+    // ---------- View Navigation ----------
+    function showView(id) {
+      document.querySelectorAll('main section').forEach(s => s.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      
+      if(id === 'dashboard') refreshDashboard();
+      if(id === 'application-steps') loadStepContent();
+    }
+
+    function startApplication() {
+      const current = loadCurrent();
+      if(!current) {
+        showView('register'); 
+        alert('Please register or login to start your application.'); 
+        return;
+      } 
+      showView('application-steps');
+    }
+
+    // ---------- Authentication ----------
+    function handleRegister() {
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim().toLowerCase();
+      const pw = document.getElementById('regPassword').value;
+      const pw2 = document.getElementById('regPassword2').value;
+      
+      if(!name || !email) return alert('Please provide name and email.');
+      if(pw !== pw2) return alert('Passwords do not match.');
+      
+      const users = loadUsers();
+      if(users[email]) return alert('An account with that email already exists. Please login.');
+      
+      users[email] = {
+        name, 
+        email, 
+        password: pw, 
+        files: [], 
+        status: 'In Progress',
+        application: {
+          personal: {},
+          academic: {},
+          financial: {},
+          documents: []
+        }
+      };
+      
+      saveUsers(users);
+      saveCurrent(email);
+      alert('Registration successful — you are logged in. Continue with your application.');
+      showView('application-steps');
+    }
+
+    function handleLogin() {
+      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const pw = document.getElementById('loginPassword').value;
+      const users = loadUsers();
+      
+      if(!users[email]) return alert('Account not found. Please register.');
+      if(users[email].password !== pw) return alert('Incorrect password.');
+      
+      saveCurrent(email);
+      alert('Login successful');
+      showView('dashboard');
+    }
+
+    function logout() {
+      localStorage.removeItem('aims_current');
+      alert('Logged out');
+      showView('home');
+    }
+
+    // ---------- Bursary Application Steps ----------
+    function loadStepContent() {
+      const stepContent = document.getElementById('step-content');
+      const prevBtn = document.getElementById('prev-step');
+      const nextBtn = document.getElementById('next-step');
+      
+      // Show/hide previous button
+      prevBtn.style.display = state.currentStep > 1 ? 'block' : 'none';
+      
+      // Update next button text
+      nextBtn.textContent = state.currentStep === 5 ? 'Submit Application' : 'Next Step';
+      
+      // Update step indicators
+      document.querySelectorAll('.step').forEach((step, index) => {
+        const stepNum = index + 1;
+        step.classList.remove('active', 'completed');
+        
+        if(stepNum === state.currentStep) {
+          step.classList.add('active');
+        } else if(stepNum < state.currentStep) {
+          step.classList.add('completed');
+        }
+      });
+      
+      // Load step-specific content
+      switch(state.currentStep) {
+        case 1:
+          stepContent.innerHTML = `
+            <h3>Personal Information</h3>
+            <form id="personal-form">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div>
+                  <label for="firstName">First Name</label>
+                  <input type="text" id="firstName" required>
+                </div>
+                <div>
+                  <label for="lastName">Last Name</label>
+                  <input type="text" id="lastName" required>
+                </div>
+              </div>
+              <div>
+                <label for="idNumber">ID Number</label>
+                <input type="text" id="idNumber" required>
+              </div>
+              <div>
+                <label for="phone">Phone Number</label>
+                <input type="text" id="phone" required>
+              </div>
+              <div>
+                <label for="address">Residential Address</label>
+                <textarea id="address" rows="3" required></textarea>
+              </div>
+            </form>
+          `;
+          break;
+          
+        case 2:
+          stepContent.innerHTML = `
+            <h3>Academic Information</h3>
+            <form id="academic-form">
+              <div>
+                <label for="institution">Educational Institution</label>
+                <input type="text" id="institution" required>
+              </div>
+              <div>
+                <label for="course">Course/Program</label>
+                <input type="text" id="course" required>
+              </div>
+              <div>
+                <label for="year">Year of Study</label>
+                <select id="year" required>
+                  <option value="">Select Year</option>
+                  <option value="1">First Year</option>
+                  <option value="2">Second Year</option>
+                  <option value="3">Third Year</option>
+                  <option value="4">Fourth Year</option>
+                  <option value="postgrad">Postgraduate</option>
+                </select>
+              </div>
+              <div>
+                <label for="grades">Current Average Grade (%)</label>
+                <input type="text" id="grades" required>
+              </div>
+            </form>
+          `;
+          break;
+          
+        case 3:
+          stepContent.innerHTML = `
+            <h3>Financial Information</h3>
+            <form id="financial-form">
+              <div>
+                <label for="householdIncome">Household Monthly Income (ZAR)</label>
+                <input type="text" id="householdIncome" required>
+              </div>
+              <div>
+                <label for="dependents">Number of Dependents</label>
+                <input type="text" id="dependents" required>
+              </div>
+              <div>
+                <label for="financialNeed">Explain Your Financial Need</label>
+                <textarea id="financialNeed" rows="4" required></textarea>
+              </div>
+            </form>
+          `;
+          break;
+          
+        case 4:
+          stepContent.innerHTML = `
+            <h3>Document Upload</h3>
+            <p class="muted">Please upload the required documents for your application.</p>
+            
+            <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;margin-top:12px">
+              <div>
+                <div class="uploader" id="dropZone">
+                  Drag & drop files here, or <label for="fileInput" style="color:var(--blue);text-decoration:underline;cursor:pointer">browse</label>
+                  <input id="fileInput" type="file" multiple accept=".pdf,image/*" style="display:none" onchange="handleFiles(this.files)">
+                </div>
+
+                <div class="file-list" id="fileList"></div>
+              </div>
+
+              <div class="card">
+                <h3 style="margin-top:0">Required Documents</h3>
+                <ol>
+                  <li>ID Document</li>
+                  <li>Academic Transcript</li>
+                  <li>Proof of Residence</li>
+                  <li>Proof of Income</li>
+                </ol>
+                <p class="muted small">Files are saved locally for this demo.</p>
+              </div>
+            </div>
+          `;
+          
+          // Initialize drag and drop for document upload
+          const dropZone = document.getElementById('dropZone');
+          dropZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--blue-dark)';
+          });
+          
+          dropZone.addEventListener('dragleave', e => {
+            dropZone.style.borderColor = 'rgba(11,99,216,.12)';
+          });
+          
+          dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'rgba(11,99,216,.12)';
+            handleFiles(e.dataTransfer.files);
+          });
+          
+          break;
+          
+        case 5:
+          const current = loadCurrent();
+          const users = loadUsers();
+          const userData = users[current] || {};
+          
+          stepContent.innerHTML = `
+            <h3>Review Your Application</h3>
+            <p class="muted">Please review all information before submitting your application.</p>
+            
+            <div class="grid" style="margin-top:20px">
+              <div class="card">
+                <h4>Personal Information</h4>
+                <p><strong>Name:</strong> ${userData.application?.personal?.firstName || ''} ${userData.application?.personal?.lastName || ''}</p>
+                <p><strong>ID Number:</strong> ${userData.application?.personal?.idNumber || ''}</p>
+                <p><strong>Phone:</strong> ${userData.application?.personal?.phone || ''}</p>
+              </div>
+              
+              <div class="card">
+                <h4>Academic Information</h4>
+                <p><strong>Institution:</strong> ${userData.application?.academic?.institution || ''}</p>
+                <p><strong>Course:</strong> ${userData.application?.academic?.course || ''}</p>
+                <p><strong>Year:</strong> ${userData.application?.academic?.year || ''}</p>
+              </div>
+            </div>
+            
+            <div class="card" style="margin-top:16px">
+              <h4>Uploaded Documents</h4>
+              <ul>
+                ${userData.files && userData.files.length > 0 
+                  ? userData.files.map(f => `<li>${escapeHtml(f.name)}</li>`).join('') 
+                  : '<li>No documents uploaded</li>'}
+              </ul>
+            </div>
+          `;
+          break;
+      }
+    }
+
+    function nextStep() {
+      // Validate current step before proceeding
+      if(state.currentStep < 5) {
+        if(validateStep(state.currentStep)) {
+          saveStepData(state.currentStep);
+          state.currentStep++;
+          loadStepContent();
+        }
+      } else {
+        // Submit application
+        submitApplication();
+      }
+    }
+
+    function prevStep() {
+      if(state.currentStep > 1) {
+        state.currentStep--;
+        loadStepContent();
+      }
+    }
+
+    function validateStep(step) {
+      // Simple validation for demo purposes
+      switch(step) {
+        case 1:
+          const firstName = document.getElementById('firstName');
+          const lastName = document.getElementById('lastName');
+          if(!firstName.value || !lastName.value) {
+            alert('Please complete all required fields.');
+            return false;
+          }
+          break;
+        case 2:
+          const institution = document.getElementById('institution');
+          if(!institution.value) {
+            alert('Please complete all required fields.');
+            return false;
+          }
+          break;
+        case 3:
+          const householdIncome = document.getElementById('householdIncome');
+          if(!householdIncome.value) {
+            alert('Please complete all required fields.');
+            return false;
+          }
+          break;
+        case 4:
+          const current = loadCurrent();
+          const users = loadUsers();
+          const userData = users[current] || {};
+          if(!userData.files || userData.files.length === 0) {
+            alert('Please upload at least one document.');
+            return false;
+          }
+          break;
+      }
+      return true;
+    }
+
+    function saveStepData(step) {
+      const current = loadCurrent();
+      const users = loadUsers();
+      
+      if(!users[current]) return;
+      
+      switch(step) {
+        case 1:
+          users[current].application.personal = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            idNumber: document.getElementById('idNumber').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value
+          };
+          break;
+        case 2:
+          users[current].application.academic = {
+            institution: document.getElementById('institution').value,
+            course: document.getElementById('course').value,
+            year: document.getElementById('year').value,
+            grades: document.getElementById('grades').value
+          };
+          break;
+        case 3:
+          users[current].application.financial = {
+            householdIncome: document.getElementById('householdIncome').value,
+            dependents: document.getElementById('dependents').value,
+            financialNeed: document.getElementById('financialNeed').value
+          };
+          break;
+      }
+      
+      saveUsers(users);
+    }
+
+    // ---------- Document Upload ----------
+    function handleFiles(files) {
+      const arr = Array.from(files);
+      const allowed = ['application/pdf', 'image/png', 'image/jpeg'];
+      
+      arr.forEach(f => {
+        if(f.size > 10 * 1024 * 1024) {
+          alert('File too large: ' + f.name);
+          return;
+        }
+        
+        if(!allowed.includes(f.type)) {
+          alert('Unsupported file type: ' + f.name);
+          return;
+        }
+        
+        // Store in memory for preview and for 'upload'
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          state.files.push({name: f.name, type: f.type, data: ev.target.result});
+          renderFileList();
+          
+          // Save to user data
+          const current = loadCurrent();
+          const users = loadUsers();
+          if(users[current]) {
+            users[current].files = state.files;
+            saveUsers(users);
+          }
+        };
+        reader.readAsDataURL(f);
+      });
+    }
+
+    function renderFileList() {
+      const fileListEl = document.getElementById('fileList');
+      fileListEl.innerHTML = '';
+      
+      state.files.forEach((f, i) => {
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        div.innerHTML = `
+          <div>
+            <strong>${escapeHtml(f.name)}</strong>
+            <div class='small muted'>${f.type}</div>
+          </div>
+          <div>
+            <button class='btn' onclick='removeFile(${i})'>Remove</button>
+          </div>
+        `;
+        fileListEl.appendChild(div);
+      });
+    }
+
+    function removeFile(i) {
+      state.files.splice(i, 1);
+      renderFileList();
+      
+      // Update user data
+      const current = loadCurrent();
+      const users = loadUsers();
+      if(users[current]) {
+        users[current].files = state.files;
+        saveUsers(users);
+      }
+    }
+
+    function submitApplication() {
+      const current = loadCurrent();
+      if(!current) return alert('Please login or register first.');
+      
+      const users = loadUsers();
+      if(!users[current].files || users[current].files.length === 0) {
+        return alert('Please upload at least one document.');
+      }
+      
+      users[current].status = 'Submitted';
+      users[current].submissionDate = new Date().toISOString().split('T')[0];
+      users[current].applicationId = '#' + Math.floor(1000 + Math.random() * 9000);
+      
+      saveUsers(users);
+      state.files = [];
+      
+      alert('Application submitted successfully. Redirecting to dashboard.');
+      showView('dashboard');
+    }
+
+    // ---------- Dashboard Functions ----------
+    function refreshDashboard() {
+      const current = loadCurrent();
+      const welcome = document.getElementById('welcomeName');
+      const statusP = document.getElementById('statusPill');
+      
+      if(!current) {
+        showView('login');
+        return;
+      }
+      
+      const users = loadUsers();
+      const me = users[current];
+      
+      if(!me) {
+        showView('login');
+        return;
+      }
+      
+      welcome.textContent = `Welcome, ${me.name}`;
+      statusP.textContent = me.status || 'Not started';
+      statusP.className = 'status-pill ' + (me.status === 'Submitted' ? 'pending' : '');
+      
+      showPanel('overview');
+    }
+
+    function showPanel(panel) {
+      const panelTitle = document.getElementById('panelTitle');
+      const panelBody = document.getElementById('panelBody');
+      const current = loadCurrent();
+      const users = loadUsers();
+      const me = users[current] || {};
+      
+      // Update active menu item
+      document.querySelectorAll('.menu button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      switch(panel) {
+        case 'overview':
+          panelTitle.textContent = 'Dashboard';
+          panelBody.innerHTML = `
+            <div class="grid-3">
+              <div class="dashboard-card">
+                <h3>Application Status</h3>
+                <div class="status-pill ${me.status === 'Submitted' ? 'pending' : ''}" style="font-size:14px;margin-bottom:12px">
+                  ${me.status || 'Not Started'}
+                </div>
+                <p class="muted small">Your application is currently under review by the ASSET team.</p>
+              </div>
+              
+              <div class="dashboard-card">
+                <h3>Messages</h3>
+                <div class="message-item">
+                  <strong>1 new message from Admin</strong>
+                  <p class="muted small">Please verify your contact details...</p>
+                </div>
+                <button class="btn" style="width:100%;margin-top:8px">View All Messages</button>
+              </div>
+              
+              <div class="dashboard-card">
+                <h3>Notifications</h3>
+                <div class="notification-item">
+                  <strong>Application received</strong>
+                  <p class="muted small">${me.submissionDate || '2025-10-15'}</p>
+                </div>
+                <div class="notification-item">
+                  <strong>Under review</strong>
+                  <p class="muted small">By ASSET team</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="grid" style="margin-top:20px">
+              <div class="dashboard-card">
+                <h3>Application Details</h3>
+                <p><strong>Application ID:</strong> ${me.applicationId || 'Not assigned'}</p>
+                <p><strong>Date Submitted:</strong> ${me.submissionDate || 'Not submitted'}</p>
+                <p><strong>Institution:</strong> ${me.application?.academic?.institution || 'University of Johannesburg'}</p>
+                <p><strong>Course:</strong> ${me.application?.academic?.course || 'Computer Science'}</p>
+                <div style="margin-top:12px">
+                  <button class="primary">View Full Application</button>
+                </div>
+              </div>
+              
+              <div class="dashboard-card">
+                <h3>Recent Activity</h3>
+                <div class="activity-item">
+                  <div class="activity-icon">✓</div>
+                  <div>
+                    <strong>Application Submitted</strong>
+                    <p class="muted small">${me.submissionDate || '2025-10-15'}</p>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon">✓</div>
+                  <div>
+                    <strong>Document Verification</strong>
+                    <p class="muted small">All documents verified</p>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon">⏳</div>
+                  <div>
+                    <strong>Under Review</strong>
+                    <p class="muted small">Your application is being reviewed</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          break;
+          
+        case 'applications':
+          panelTitle.textContent = 'My Applications';
+          panelBody.innerHTML = `
+            <div class="dashboard-card">
+              <h3>Current Application</h3>
+              <p><strong>Status:</strong> <span class="status-pill ${me.status === 'Submitted' ? 'pending' : ''}">${me.status || 'Not started'}</span></p>
+              <p><strong>Submission Date:</strong> ${me.submissionDate || 'Not submitted'}</p>
+              <p><strong>Application ID:</strong> ${me.applicationId || 'Not assigned'}</p>
+              
+              <div style="margin-top:16px">
+                <button class="primary" onclick="showView('application-steps')">${me.status === 'Submitted' ? 'Update Application' : 'Continue Application'}</button>
+                <button class="btn" style="margin-left:8px">View Application History</button>
+              </div>
+            </div>
+          `;
+          break;
+          
+        case 'messages':
+          panelTitle.textContent = 'Messages';
+          panelBody.innerHTML = `
+            <div class="dashboard-card">
+              <div class="message-item">
+                <strong>Admin (Today)</strong>
+                <p>Please verify your contact details in your application.</p>
+              </div>
+              <div class="message-item">
+                <strong>ASSET Team (2 days ago)</strong>
+                <p>Your application has been received and is under review.</p>
+              </div>
+              
+              <div style="margin-top:16px">
+                <button class="primary">Compose New Message</button>
+              </div>
+            </div>
+          `;
+          break;
+          
+        case 'settings':
+          panelTitle.textContent = 'User Settings & Security';
+          panelBody.innerHTML = `
+            <div class="grid">
+              <div class="dashboard-card">
+                <h3>Profile</h3>
+                <p><strong>Name:</strong> ${escapeHtml(me.name || '—')}</p>
+                <p><strong>Email:</strong> ${escapeHtml(me.email || '—')}</p>
+                <div style="margin-top:12px">
+                  <button class="primary">Edit Profile</button>
+                </div>
+              </div>
+              
+              <div class="dashboard-card">
+                <h3>Notifications</h3>
+                <p><input type="checkbox" checked> Email notifications</p>
+                <p><input type="checkbox" checked> Application status updates</p>
+                <p><input type="checkbox"> Marketing communications</p>
+              </div>
+            </div>
+            
+            <div class="dashboard-card" style="margin-top:16px">
+              <h3>Security</h3>
+              <p><strong>Last login:</strong> Today</p>
+              <p><strong>Password:</strong> ********</p>
+              <div style="margin-top:12px">
+                <button class="primary">Change Password</button>
+                <button class="btn" style="margin-left:8px">Two-Factor Authentication</button>
+              </div>
+            </div>
+          `;
+          break;
+      }
+    }
+
+    // ---------- Initialize Application ----------
+    (function() {
+      const cur = loadCurrent();
+      if(cur) {
+        showView('dashboard');
+      } else {
+        showView('home');
+      }
+    })();
+  </script>
+</body>
+</html>
